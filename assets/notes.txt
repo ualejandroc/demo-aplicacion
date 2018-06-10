@@ -1,0 +1,16 @@
+Cosas a recordar
+
+1.  <br /> ni  <br> </br>  dentro de <View> no funcionan
+
+2. Si aparece error de compilacion hay que borrar la cahe de android o sus configuraciones
+asi
+
+Execution failed for task ':app:prepareSrolkReactNativeFilePickerUnspecifiedLibrary'.
+Could not expand ZIP .....node_modules\react-native-file-picker\android\build\outputs\aar\react-native-file-picker-release.aar
+
+(on windows):
+
+cd android 
+gradlew clean 
+cd ..
+react-native run-android

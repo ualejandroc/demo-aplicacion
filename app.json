@@ -1,0 +1,10 @@
+{
+  "name": "NativebaseKitchenSink",
+  "displayName": "NativebaseKitchenSink",
+  "expo": {
+    "name": "My app",
+    "slug": "my-app",
+    "sdkVersion": "UNVERSIONED",
+    "privacy": "public"
+  }
+}
