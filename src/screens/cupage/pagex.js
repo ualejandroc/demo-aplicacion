@@ -209,6 +209,7 @@ class NestedGrid extends Component {
               }
               
               }>
+              
             <Icon name="share" />
             <Button style={{ backgroundColor: '#34A34F' }}>
               <Icon name="logo-whatsapp" />
@@ -219,6 +220,7 @@ class NestedGrid extends Component {
             <Button disabled style={{ backgroundColor: '#DD5144' }}>
               <Icon name="mail" />
             </Button>
+              
           </Fab>
 
       </Container>

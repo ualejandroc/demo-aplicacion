@@ -19,6 +19,8 @@ import {
 //import { RNCamera, FaceDetector } from 'react-native-camera';
 import styles from "../form/styles";
 
+import  Captures  from "./captures";
+
 class PostForm extends Component {
 
  /* takePicture() {
@@ -49,6 +51,10 @@ class PostForm extends Component {
               <Label>Titulo de Producto</Label>              
             </Item>
             <Input />
+
+          <Text style={styles.separation}></Text>
+          
+            <Captures />
           
 {/*}
 <Camera
