@@ -16,7 +16,8 @@ import {
   Text,
   Textarea
 } from "native-base";
-//import { RNCamera, FaceDetector } from 'react-native-camera';
+
+import Api from "../../products/WooCommerce/Woocommerce";
 import styles from "../form/styles";
 
 import  Captures  from "./captures";
@@ -28,7 +29,44 @@ class PostForm extends Component {
        .then((data) => console.log(data))
        .catch(err => console.error(err));
   }*/
+  state = {
+    textTitle: '',   
+    dataModel = {
+      name: 'Premium',
+      type: 'simple',
+      regular_price: '21.99',
+      description: 'Pellentesque habitant morbi tristique eleifend leo.',
+      short_description: 'Pellentesque habitant',
+      categories: [
+        {
+          id: '',
+         // name: "Clothing",
+        },
+        {
+          id: ''
+        }
+      ],
+      images: [
+        {
+          src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg',
+          position: 0
+        },
+        {
+          src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_back.jpg',
+          position: 1
+        }
+      ]
+    }  
+  };
 
+   
+ 
+ 
+  savePost(data){
+    Api.post('products', data, function(err, data, res) {
+    console.log(res);
+    });
+   }
 
   render() {
     return (
@@ -50,7 +88,11 @@ class PostForm extends Component {
             <Item inlineLabel>
               <Label>Titulo de Producto</Label>              
             </Item>
-            <Input />
+            <Input  onChangeText={(text) => this.setState({textTitle: text})} />
+
+            <Text style={styles.separation}></Text>
+            
+            <Text style={styles.separation}>{this.state.textTitle} </Text>
 
           <Text style={styles.separation}></Text>
           
