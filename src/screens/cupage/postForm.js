@@ -30,8 +30,8 @@ class PostForm extends Component {
        .catch(err => console.error(err));
   }*/
   state = {
-    textTitle: '',   
-    dataModel = {
+       resp:'',
+    dataModel :{
       name: 'Premium',
       type: 'simple',
       regular_price: '21.99',
@@ -65,6 +65,9 @@ class PostForm extends Component {
   savePost(data){
     Api.post('products', data, function(err, data, res) {
     console.log(res);
+    
+    this.setState({resp:res});
+    this.state.resp=res;
     });
    }
 
@@ -88,39 +91,42 @@ class PostForm extends Component {
             <Item inlineLabel>
               <Label>Titulo de Producto</Label>              
             </Item>
-            <Input  onChangeText={(text) => this.setState({textTitle: text})} />
+            <Input  onChangeText={(text) => this.setState({dataModel:{name: text}})} />
 
-            <Text style={styles.separation}></Text>
-            
-            <Text style={styles.separation}>{this.state.textTitle} </Text>
-
+            <Text style={styles.separation}></Text>       
           <Text style={styles.separation}></Text>
           
-            <Captures />
-          
-{/*}
-<Camera
-   ref={(cam) => {
-       this.camera = cam;
-    }}
-    style={styles.preview}
-    aspect={Camera.constants.Aspect.fill}>
-       <Text style={styles.capture} onPress={this.takePicture.bind(this)}>
-          [CAPTURE]
-       </Text>
-</Camera>
-  */}
+            <Captures />     
+
+             <Text style={styles.separation}></Text>
+             <Item inlineLabel>
+              <Label>Precio</Label>              
+            </Item>
+            <Input  onChangeText={(text) => this.setState({dataModel:{regular_price: text}})} />
+
+            <Text style={styles.separation}></Text>           
+
 
             <Text style={styles.separation}></Text>
               <Label               
               floatingLabel >Descripcion corta</Label>              
-              <Textarea rowSpan={5} bordered info placeholder="..." />
+              <Textarea rowSpan={5}
+              onChangeText={(text) => this.setState({dataModel:{short_description: text}})} 
+              bordered 
+              info placeholder="..." />
             
               <Text style={styles.separation}></Text>
+            
+
 
               <Label               
               floatingLabel >Descripcion Detallada</Label>              
-              <Textarea rowSpan={5} bordered info placeholder="..." />
+              <Textarea rowSpan={5} 
+             onChangeText={(text) => this.setState({dataModel:{description: text}})} 
+            bordered info placeholder="..." />
+
+              <Text style={styles.separation}></Text>
+            
             
            
             {/* <Item>
@@ -138,9 +144,14 @@ class PostForm extends Component {
             </Item>
             */}
           </Form>
-          <Button block style={{ margin: 15, marginTop: 50 }}>
+          <Button block 
+          onPress={() => {this.savePost(this.state.dataModel); } }
+          style={{ margin: 15, marginTop: 50 }}
+          >
             <Text>Guardar</Text>
           </Button>
+          <Text style={styles.separation}>{this.state.resp}</Text> 
+          <Text style={styles.separation}></Text> 
         </Content>
       </Container>
     );
