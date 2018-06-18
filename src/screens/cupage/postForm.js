@@ -18,6 +18,7 @@ import {
 } from "native-base";
 
 import Api from "../../products/WooCommerce/Woocommerce";
+
 import styles from "../form/styles";
 
 import  Captures  from "./captures";
@@ -32,44 +33,52 @@ class PostForm extends Component {
   state = {
        resp:'',
     dataModel :{
-      name: 'Premium',
-      type: 'simple',
-      regular_price: '21.99',
-      description: 'Pellentesque habitant morbi tristique eleifend leo.',
-      short_description: 'Pellentesque habitant',
-      categories: [
-        {
-          id: '',
-         // name: "Clothing",
-        },
-        {
-          id: ''
-        }
-      ],
-      images: [
-        {
-          src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg',
-          position: 0
-        },
-        {
-          src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_back.jpg',
-          position: 1
-        }
-      ]
+      name: 'Premium Quality',
+  type: 'simple',
+  regular_price: '21.99',
+  description: 'Pellentesque habitant  tristiqueo.',
+  short_description: 'Pellentesque habitant senectus et netus et malesuada fames ac turpis egestas.',
+  categories: [
+    {
+      id: 9
+    },
+    {
+      id: 14
+    }
+  ],
+  images: [
+    {
+      src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg',
+      position: 0
+    },
+    {
+      src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_back.jpg',
+      position: 1
+    }
+  ]
     }  
   };
 
    
+  fetchData() {
+
+    
+  }
  
- 
-  savePost(data){
-    Api.post('products', data, function(err, data, res) {
+  savePost(datas){
+    var self =this;
+    Api.post('products', datas, function(err, data, res) {
     console.log(res);
     
-    this.setState({resp:res});
-    this.state.resp=res;
+    self.setState({resp:err });
+    
+    }).then(function (datax) {
+      console.log(datax);
+
+     
     });
    }
+
 
   render() {
     return (
@@ -145,12 +154,12 @@ class PostForm extends Component {
             */}
           </Form>
           <Button block 
-          onPress={() => {this.savePost(this.state.dataModel); } }
+          onPress={() => {this.savePost(this.state.dataModel ); } }
           style={{ margin: 15, marginTop: 50 }}
           >
             <Text>Guardar</Text>
           </Button>
-          <Text style={styles.separation}>{this.state.resp}</Text> 
+          <Text style={styles.separation}>{JSON.stringify(this.state.dataModel)}</Text> 
           <Text style={styles.separation}></Text> 
         </Content>
       </Container>

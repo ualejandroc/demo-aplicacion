@@ -128,6 +128,7 @@ import Actionsheet from "./screens/actionsheet";
 //
 import IconsFooter from "./screens/cupage/iconsFooter";
 import PostForm from "./screens/cupage/postForm";
+import CreateProd from "./screens/cupage/createProd";
 
 
 const Drawer = DrawerNavigator(
@@ -162,6 +163,7 @@ const Drawer = DrawerNavigator(
     //
     Pagex:{screen:Pagex},
     PostForm :{screen:PostForm},
+    CreateProd :{screen:CreateProd},
 
   },
   {

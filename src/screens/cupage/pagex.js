@@ -211,7 +211,14 @@ class NestedGrid extends Component {
               }>
               
             <Icon name="share" />
-            <Button style={{ backgroundColor: '#34A34F' }}>
+            <Button style={{ backgroundColor: '#34A34F' }}
+            onPress={() => 
+              { 
+                this.props.navigation.navigate("CreateProd")
+              } }
+              
+            
+            >
               <Icon name="logo-whatsapp" />
             </Button>
             <Button style={{ backgroundColor: '#3B5998' }}>

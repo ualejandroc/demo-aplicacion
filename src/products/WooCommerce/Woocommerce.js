@@ -7,7 +7,9 @@ var Woocommerce = new WooCommerceAPI({
     consumerSecret: Constants.Keys.ConsumerSecret,
     wp_api: true,
     version: 'wc/v2',
-    queryStringAuth: true
+    queryStringAuth: true,
+    wpAPIPrefix:null
+
 });
 
 export default Woocommerce;
