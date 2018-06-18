@@ -20,6 +20,7 @@ export default class CreateProd extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      token: '',
       isLoading: true,
 
       dataModel :{
@@ -48,7 +49,9 @@ export default class CreateProd extends Component {
     ]
       }  
     }
-    this.fetchData = this.fetchData.bind(this);
+    //this.fetchData = this.fetchData.bind(this);
+    this.fetchDatas = this.fetchDatas.bind(this);
+    this.fillText = this.fillText.bind(this);
   }
 
   getInitialState() {
@@ -59,7 +62,58 @@ export default class CreateProd extends Component {
   }
 
   componentDidMount() {
-    this.fetchData();
+   // this.fetchData();
+    this.fetchDatas();
+  }
+
+  fetchDatas(){
+    var self = this;
+    var data = "username=acceso&password=0995480563";
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+    
+    xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === 4) {
+        console.log(this.responseText);
+        self.fillText(JSON.parse(this.responseText).token);
+        
+      }
+    });
+    
+    xhr.open("POST", "https://crearstore.com/wp-json/jwt-auth/v1/token");
+    xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("cache-control", "no-cache");
+    xhr.setRequestHeader("postman-token", "f44d488a-4ee4-a32c-1324-fad1c2d837ca");
+    
+    xhr.send(data);
+  }
+
+
+  fillText(token){
+    var self = this;
+    var data = "name=remium%20Quality&type=simple&regular_price=29&description=description&short_description=short_description";
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+    
+    xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === 4) {
+        console.log(this.responseText);
+        self.setState({
+          card: { pic: JSON.stringify(this.responseText) }
+          //card: { pic: responseJson[0].guid.rendered }
+        });
+      }
+    });
+    
+    xhr.open("POST", "http://crearstore.com/wp-json/wc/v2/products");
+    xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("authorization", "Bearer "+ token);
+    xhr.setRequestHeader("cache-control", "no-cache");
+    xhr.setRequestHeader("postman-token", "4c654d71-858b-54a9-280a-819ffb6155e5");
+    
+    xhr.send(data);
   }
 
 
@@ -71,18 +125,20 @@ export default class CreateProd extends Component {
     });
     ////
 
-    fetch('https://crearstore.com/wp-json/jwt-auth/v1/token', {method: 'POST',
-    headers: {            
+    fetch('https://crearstore.com/wp-json/jwt-auth/v1/token',
+     { 
+       method: 'POST',
+       headers: {            
               'Content-Type'    : 'application/x-www-form-urlencoded',
               "cache-control": "no-cache",
-              'Accept': 'application/json',
+              'Accept': 'application/json; charset=UTF-8',
           },
-          mode: 'cors',
-          body:JSON.stringify({
+       mode: 'cors',
+       body:JSON.stringify({form:JSON.stringify({
             'username':'acceso',
             'password': '0995480563'
           }),
-        })
+        }) } )
       .then((response) =>   
     
          {
