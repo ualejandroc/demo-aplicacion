@@ -33,25 +33,23 @@ GLOBAL.fetch = fetch;
 class PostForm extends Component {
 
 
-  state = {
-    card: {pic:''},
-       resp:'',
- 
-      name: 'Premium Quality',
+state = {
+  card: {pic:''},
+  resp:'',
+  name: 'Premium Quality',
   type: 'simple',
   regular_price: '45.99',
   description: 'Pellentesque habitant  tristiqueo.',
   short_description: 'Pellentesque habitant senectus et netus et malesuada fames ac turpis egestas.',
- /* categories: [
+  categories: [
     {
       id: 9
     },
     {
       id: 14
     }
-  ],*/
-  images: [
-    {
+  ],
+  images: [{
       src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg',
       position: 0
     },
@@ -63,18 +61,86 @@ class PostForm extends Component {
   dataModel:''
     
   };
+   dataModel={
+    name: 'Premium Quality',
+    type: 'simple',
+    regular_price: '45.99',
+    description: 'Pellentesque habitant  tristiqueo.',
+    short_description: 'Pellentesque habitant senectus et netus et malesuada fames ac turpis egestas.',
+    categories: [
+      {
+        id: 9
+      },
+      {
+        id: 14
+      }
+    ],
+    images: [{
+        src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg',
+        position: 0
+      },
+      {
+        src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_back.jpg',
+        position: 1
+      }
+    ]
+  }
 
   buildModel(){
+   /* 
    this.setState({
-     dataModel:  //JSON.stringify(
+     dataModel: 
       `name=${encodeURI(this.state.name)}&`+
        `type=${encodeURI(this.state.type)}&`+
        `regular_price=${ this.state.regular_price}&`+
        `short_description=${ this.state.short_description}&`+
       `description=${encodeURI(this.state.description)}&`+
       `images=${JSON.stringify(this.state.images)}`
-    //  )
-     }) ;
+ 
+     }) ;   */
+  }
+
+  buildFormModel(){
+    var data = new FormData();
+
+    var model= this.dataModel;
+
+    var names=Object.keys(model);
+    var infos=Object.values(model);
+
+    var arrayCat='categories';
+    var arrayIms='images';
+    for(var x =0; x< names.length; x++){
+      if(names[x]==arrayCat){
+
+        var terms=Object.keys(model[arrayCat]);
+        for(var p =0; p< terms.length; p++){
+          var kys=Object.keys(model[arrayCat][p]);
+          var its=Object.values(model[arrayCat][p]);
+          for(var y =0; y< kys.length; y++){
+            data.append(arrayCat+"["+p+"]["+kys[y]+"]", its[y]);
+          }
+        }
+
+      }else if (names[x]==arrayIms){
+
+        var terms=Object.keys(model[arrayIms]);
+        for(var p =0; p< terms.length; p++){
+          var kys=Object.keys(model[arrayIms][p]);
+          var its=Object.values(model[arrayIms][p]);
+          for(var y =0; y< kys.length; y++){
+            data.append(arrayIms+"["+p+"]["+kys[y]+"]", its[y]);
+          }
+        }
+
+
+      }else{
+        data.append(names[x], infos[x]);
+      }
+    }
+
+    return data;
+
   }
 
    
@@ -104,32 +170,31 @@ class PostForm extends Component {
 
   fillText(token){
     var self = this;
-    //var data = "name=remium%20Quality&type=simple&regular_price=29&description=description&short_description=short_description";
-    self.buildModel();
-    var data=self.state.dataModel;
+    
+    var data=self.buildFormModel();
 
-    console.log(self.state.dataModel);
+    console.log(JSON.stringify(data));
+    card: { pic: JSON.stringify(data) }
 
     var xhr = new XMLHttpRequest();
     xhr.withCredentials = true;
-    
+
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === 4) {
-        console.log(this.responseText);
         self.setState({
           card: { pic: JSON.stringify(this.responseText) }
-          //card: { pic: responseJson[0].guid.rendered }
+        
         });
       }
-    });
-    
-    xhr.open("POST", "http://crearstore.com/wp-json/wc/v2/products");
-    xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+    });   
+
+    xhr.open("POST", "https://crearstore.com/wp-json/wc/v2/products/");
+    xhr.setRequestHeader("Content-Type", "multipart/form-data");
     xhr.setRequestHeader("authorization", "Bearer "+ token);
-    xhr.setRequestHeader("cache-control", "no-cache");
-    xhr.setRequestHeader("postman-token", "4c654d71-858b-54a9-280a-819ffb6155e5");
-    
-    xhr.send(data);
+    xhr.setRequestHeader("Cache-Control", "no-cache");
+    xhr.setRequestHeader("Postman-Token", "467a136a-44be-41d2-8265-cae0afa8fe3f");
+
+    xhr.send(data);  
   }
 
  
