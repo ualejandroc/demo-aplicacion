@@ -1,0 +1,23 @@
+Su almacén de claves contiene 1 entrada
+
+Nombre de Alias: androiddebugkey
+Fecha de Creación: 25/05/2018
+Tipo de Entrada: PrivateKeyEntry
+Longitud de la Cadena de Certificado: 1
+Certificado[1]:
+Propietario: C=US, O=Android, CN=Android Debug
+Emisor: C=US, O=Android, CN=Android Debug
+Número de serie: 1
+Válido desde: Fri May 25 17:13:54 COT 2018 hasta: Sun May 17 17:13:54 COT 2048
+Huellas digitales del certificado:
+         MD5: E2:63:7D:2C:C0:E7:C8:C6:70:44:9B:25:D1:E1:DD:39
+         SHA1: 1D:BF:15:C3:ED:5A:59:2F:71:7E:46:36:DE:DC:26:74:69:13:E0:50
+         SHA256: 87:CD:F6:3F:AF:5B:03:08:8F:4E:B6:2F:6B:E7:EB:FC:57:00:86:7D:84:D5:32:70:E5:8D:68:9D:AA:F8:27:73
+Nombre del algoritmo de firma: SHA1withRSA
+Algoritmo de clave pública de asunto: Clave RSA de 1024 bits
+Versión: 1
+
+
+2.--------------------------
+Client ID	
+953586353505-f863ohisu2r3acslbtt021b3pnvs1m40.apps.googleusercontent.com
