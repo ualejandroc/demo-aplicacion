@@ -24,14 +24,58 @@ import styles from "../form/styles";
 
 import  Captures  from "./captures";
 
+import CustomWebView from './CustomWebView';
+
 GLOBAL.fetch = fetch;
 
 /************ */
 
 /************ */
+/*
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  containerHorizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingVertical: 10,
+    backgroundColor: "#eee"
+  }
+});
+*/
+
 
 class PostForm extends Component {
 
+  constructor(props){
+    super(props);
+
+    var d = new Date();
+    var named = d.getDate().toString()+d.getDay().toString()+d.getMilliseconds().toString();
+
+   this.HTML = `
+    <html>
+     <head>
+       
+     </head>
+     <body>
+    <form enctype="multipart/form-data" id="formImg"
+    action="http://crearstore.com/fila/conn.php" method="POST"
+     target="request">
+        <input id="imgs" name="uploadedfile" type="file" /> 
+        <input id="ImgName" name="ImgName" type="hidden" value="${named}">  
+        </form>
+           <image id="resImg" src='http://www.idiomaspc.com/grafik/franzoesisch150.jpg' />
+           <div id="response">${named}</div>
+       
+        </body>
+        </html>
+    `;
+
+    this.imgSrc='http://crearstore.com/fila/'+named + '.jpg';
+
+  }
 
 state = {
   card: {pic:''},
@@ -226,7 +270,37 @@ state = {
             <Text style={styles.separation}></Text>       
           <Text style={styles.separation}></Text>
           
-            <Captures />     
+          <CustomWebView source={{html: this.HTML}}
+                injectedJavaScript={
+                `   
+                  function sendData(){
+                    var inputForm = document.querySelector('#formImg');
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.withCredentials = false;
+                    var txtImg="";
+
+                    xhr.addEventListener("readystatechange", function () {
+                      if (this.readyState === 4) {
+                        txtImg = this.responseText;
+                      }
+                    });
+
+                    xhr.open("POST", "http://crearstore.com/fila/conn.php",false);
+                
+                    xhr.send(new FormData(inputForm)); 
+
+                    return txtImg;
+                  
+                  };
+                  
+                
+                  document.querySelector('#imgs').addEventListener('change', async function(event) {
+                    var resImg = sendData();
+                
+                    alert(JSON.parse(resImg).image_url);
+                  
+                });` } />    
 
              <Text style={styles.separation}></Text>
              <Item inlineLabel>
@@ -291,5 +365,6 @@ state = {
     );
   }
 }
+
 
 export default PostForm;

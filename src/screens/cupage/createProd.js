@@ -116,69 +116,7 @@ export default class CreateProd extends Component {
     xhr.send(data);
   }
 
-
-  // This is where the magic happens! Fetches the data from our API and updates the application state.
-  fetchData() {
-    this.setState({
-      // We'll also set card to null when loading new cards so that the loading message shows.
-      card: null,
-    });
-    ////
-
-    fetch('https://crearstore.com/wp-json/jwt-auth/v1/token',
-     { 
-       method: 'POST',
-       headers: {            
-              'Content-Type'    : 'application/x-www-form-urlencoded',
-              "cache-control": "no-cache",
-              'Accept': 'application/json; charset=UTF-8',
-          },
-       mode: 'cors',
-       body:JSON.stringify({form:JSON.stringify({
-            'username':'acceso',
-            'password': '0995480563'
-          }),
-        }) } )
-      .then((response) =>   
-    
-         {
-           console.log("Variable respondse:"+  JSON.stringify( response) );
-          fetch('https://crearstore.com/wp-json/wc/v2/products', {method: 'POST',
-          headers: {            
-                'Content-Type':"application/x-www-form-urlencoded",
-                "Authorization":"Bearer " + response.token,
-                },body: JSON.stringify( 
-                  {
-                    name: 'Premium Quality',
-                    type: 'simple',
-                    regular_price: '21.99',
-                    description: 'Pellentesque habitant  tristiqueo.',
-                    short_description: 'Pellentesque habitant senectus et netus et malesuada fames ac turpis egestas.',
-                   
-                  }
-                ),              
-              })
-              .then((responseJson)=> {
-                this.setState({
-                  card: { pic: JSON.stringify(responseJson) }
-                  //card: { pic: responseJson[0].guid.rendered }
-                });
-              })
-      })
-      .then((responseJsonx) => {
-        this.setState({
-         // card: { pic: JSON.stringify(responseJson) }
-          //card: { pic: responseJson[0].guid.rendered }
-        });
-      })
-      .catch((error) => {
-          console.error(error);
-      });
-
-    ////
-
-  }
-
+  
   // Instead of immediately rendering the template, we now check if there is data in the 'card' variable
   // and render a loading view if it's empty, or the 'card' template if there is data.
   render() {
