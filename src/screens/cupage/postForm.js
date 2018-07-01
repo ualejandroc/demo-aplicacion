@@ -15,7 +15,7 @@ import {
   Form,
   Text,
   Textarea,
-  Dimensions, TouchableHighlight, Image
+  Toast ,
 } from "native-base";
 
 import Api from "../../products/WooCommerce/Woocommerce";
@@ -31,19 +31,7 @@ GLOBAL.fetch = fetch;
 /************ */
 
 /************ */
-/*
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  containerHorizontal: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingVertical: 10,
-    backgroundColor: "#eee"
-  }
-});
-*/
+
 
 
 class PostForm extends Component {
@@ -130,25 +118,16 @@ state = {
     ]
   }
 
-  buildModel(){
-   /* 
-   this.setState({
-     dataModel: 
-      `name=${encodeURI(this.state.name)}&`+
-       `type=${encodeURI(this.state.type)}&`+
-       `regular_price=${ this.state.regular_price}&`+
-       `short_description=${ this.state.short_description}&`+
-      `description=${encodeURI(this.state.description)}&`+
-      `images=${JSON.stringify(this.state.images)}`
- 
-     }) ;   */
-  }
 
   buildFormModel(){
     var data = new FormData();
     this.dataModel['images'][0].src = this.imgSrc;
     this.dataModel.name=this.state.name;
     this.dataModel.short_description=this.state.short_description;
+    this.dataModel.description=this.state.description;
+    this.dataModel.regular_price=this.state.regular_price;
+   // this.dataModel['categories'][0].id = 0;
+
 
     var model= this.dataModel;
 
@@ -231,6 +210,12 @@ state = {
         self.setState({
           card: { pic: JSON.stringify(this.responseText) }
         
+        });
+        Toast.show({
+          text: "Producto Guardado!",
+          buttonText: "Okay",
+          duration: 3000,
+          position: "top"
         });
       }
     });   
