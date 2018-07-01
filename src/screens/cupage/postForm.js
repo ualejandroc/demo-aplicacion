@@ -24,7 +24,7 @@ import styles from "../form/styles";
 
 import  Captures  from "./captures";
 
-import CustomWebView from './CustomWebView';
+import CustomWebView from 'react-native-webview-android';
 
 GLOBAL.fetch = fetch;
 
@@ -73,7 +73,7 @@ class PostForm extends Component {
         </html>
     `;
 
-    this.imgSrc='http://crearstore.com/fila/'+named + '.jpg';
+    this.imgSrc='http://crearstore.com/fila/load/'+named + '.jpg';
 
   }
 
@@ -146,6 +146,9 @@ state = {
 
   buildFormModel(){
     var data = new FormData();
+    this.dataModel['images'][0].src = this.imgSrc;
+    this.dataModel.name=this.state.name;
+    this.dataModel.short_description=this.state.short_description;
 
     var model= this.dataModel;
 
@@ -270,7 +273,9 @@ state = {
             <Text style={styles.separation}></Text>       
           <Text style={styles.separation}></Text>
           
-          <CustomWebView source={{html: this.HTML}}
+          <CustomWebView 
+                style={styles.containers}
+                source={{html: this.HTML}}
                 injectedJavaScript={
                 `   
                   function sendData(){

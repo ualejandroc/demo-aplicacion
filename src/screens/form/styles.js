@@ -11,6 +11,15 @@ export default {
     backgroundColor:  "#eff3f6"
   },
 
+  containers: {
+    flex: 1,
+    height:60,  
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingVertical: 10,
+    backgroundColor: "#eee"
+  }
+
 
  
 };
