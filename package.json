@@ -39,8 +39,9 @@
     "react": "16.3.1",
     "react-native": "0.55.4",
     "react-native-image-picker": "^0.26.10",
+    "react-native-material-dropdown": "^0.11.1",
     "react-native-vector-icons": "4.5.0",
-    "react-native-webview-android": "^1.1.16",
+    "react-native-webview-android": "^1.1.17",
     "react-navigation": "1.5.0",
     "woocommerce-api": "^1.4.2"
   }
