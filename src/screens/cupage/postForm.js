@@ -37,19 +37,7 @@ GLOBAL.fetch = fetch;
 const logo = require("../../../assets/logo.png");
 const cardImage = require("../../../assets/drawer-cover.png");
 /************ */
-/*
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  containerHorizontal: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingVertical: 10,
-    backgroundColor: "#eee"
-  }
-});
-*/
+
 
 
 class PostForm extends Component {
@@ -100,7 +88,7 @@ class PostForm extends Component {
         </form>
         <br/>
            <image id="resImg" src='' />
-           <div id="response">${named}</div>
+        <div id="response">${named}</div>
        
         </body>
         </html>
@@ -108,13 +96,55 @@ class PostForm extends Component {
 
     this.imgSrc='http://crearstore.com/fila/load/'+named + '.jpg';
 
-    this.types = [{userType: 'admin', userName: 'Admin User'}, {userType:    'employee', userName: 'Employee User'}, {userType: 'dev', userName: 'Developer User'}];
-    
-   
+    this.token='';
 
+    this.types ='';
+ 
+    
+     //this.fetchDatas(this.cBack,this.fillCategory);
+
+     
+     
   }
 
+  componentDidMount(){
+    
+    this.fetchDatas(this.cBack,this.fillCategory);
+    
+  }
+
+      cBack(responseText){
+        this.token=JSON.parse(responseText).token; 
+      }
+
+
+      fillCategory(){
+        var self = this;
+        var token= self.token; 
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+          if (this.readyState === 4) {
+            self.types= JSON.parse(this.responseText) ;
+            //console.log(self.types);   
+          }
+        });   
+
+        xhr.open("GET", "https://crearstore.com/wp-json/wc/v2/products/categories");
+        xhr.setRequestHeader("Content-Type", "multipart/form-data");
+        xhr.setRequestHeader("authorization", "Bearer "+ token);
+        xhr.setRequestHeader("Cache-Control", "no-cache");
+        xhr.setRequestHeader("Postman-Token", "467a136a-44be-41d2-8265-cae0afa8fe3f");
+
+        xhr.send();  
+      }
+
 state = {
+  types:'',
+  selectedUserType:'',
+
   card: {pic:''},
   resp:'',
   name: 'Premium Quality',
@@ -167,11 +197,21 @@ state = {
     ]
   }
 
-  
+  //Carga drop down de categorias
   loadUserTypes() {
-    return this.types.map(user => (
-                                             <Picker.Item label={user.userName} value={user.userType} />
-                                             ))
+    var self= this;   
+ 
+    setTimeout(function() {
+      //self.setState({types:  self.types});
+      console.log(self.types)  ; 
+        if(self.state.types!=''){
+         
+        return self.state.types.map(user => (
+          <Picker.Item key={user.id} label={user.name} value={user.slug} />
+        ))
+      }
+    }, 3000); 
+  
 }
 
   buildFormModel(){
@@ -221,7 +261,7 @@ state = {
   }
 
    
-  fetchDatas(){
+  fetchDatas(cBack, fillCat){
     var self = this;
     var data = "username=acceso&password=0995480563";
 
@@ -229,9 +269,10 @@ state = {
     xhr.withCredentials = true;
     
     xhr.addEventListener("readystatechange", function () {
-      if (this.readyState === 4) {
-        console.log(this.responseText);
-        self.fillText(JSON.parse(this.responseText).token);
+      if (this.readyState === 4) {       
+        //self.fillText(JSON.parse(this.responseText).token);
+        cBack(this.responseText);
+        fillCat();
         
       }
     });
@@ -245,9 +286,9 @@ state = {
   }
 
 
-  fillText(token){
+  fillText(){
     var self = this;
-    
+    var token= self.token;
     var data=self.buildFormModel();
 
     console.log(JSON.stringify(data));
@@ -350,7 +391,6 @@ state = {
               selectedValue={this.state.selectedUserType}
               onValueChange={(itemValue, itemIndex) =>
               this.setState({selectedUserType: itemValue})}>
-
               {this.loadUserTypes()}
             </Picker> 
 
@@ -378,20 +418,15 @@ state = {
                       }
                     });
 
-                    xhr.open("POST", "http://crearstore.com/fila/conn.php",false);
-                
+                    xhr.open("POST", "http://crearstore.com/fila/conn.php",false);                
                     xhr.send(new FormData(inputForm)); 
-
                     return txtImg;
                   
-                  };
-                  
+                  };                  
                 
                   document.querySelector('#imgs').addEventListener('change', async function(event) {
-                    var resImg = sendData();
-                
-                    alert(JSON.parse(resImg).image_url);
-                  
+                    var resImg = sendData();                
+                    alert(JSON.parse(resImg).image_url);                  
                     });
 
                     function simulateClick() {
@@ -406,13 +441,10 @@ state = {
                       } else {                      
                   
                       }
-                    }
-                                      
+                    }                                      
                     
-                    document.querySelector('#custom-file').addEventListener('click', async function(event) {
-                     
-                      simulateClick();            
-                    
+                    document.querySelector('#custom-file').addEventListener('click', async function(event) {                     
+                      simulateClick();                            
                       }); ` 
                   } />    
 
@@ -474,7 +506,7 @@ state = {
           <Button block 
 
           underlayColor='#ccc'
-          onPress={() => { this.fetchDatas( ); } }
+          onPress={() => { this.fillText( ); } }
           style={{ margin: 15, marginTop: 50 }}
           >
             <Text>Guardar</Text>
