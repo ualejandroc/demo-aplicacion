@@ -635,7 +635,7 @@ class PostForm extends Component {
           <Button block 
 
           underlayColor='#ccc'
-          onPress={() => { this.fillText( ); } }
+          onPress={() => { this.fetchDatas( ); } }
           style={{ margin: 15, marginTop: 50 }}
           >
             <Text>Guardar</Text>
