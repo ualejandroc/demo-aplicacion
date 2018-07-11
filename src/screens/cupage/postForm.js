@@ -17,7 +17,8 @@ import {
   Text,
   Textarea,
   Toast,
-  Picker
+  Picker,
+  View
 } from "native-base";
 
 import Api from "../../products/WooCommerce/Woocommerce";
@@ -142,7 +143,7 @@ class PostForm extends Component {
 
   componentDidMount(){
     
-    this.fetchDatas(this.cBack);
+    //this.fDatas();
     
   }
 
@@ -151,7 +152,7 @@ class PostForm extends Component {
       }
 
 
-      fillCategory(){
+      async fillCategory(){
         var self = this;
         var token= self.token; 
 
@@ -161,7 +162,11 @@ class PostForm extends Component {
         xhr.addEventListener("readystatechange", function () {
           if (this.readyState === 4) {
             self.types= JSON.parse(this.responseText) ;
-            //console.log(self.types);   
+            //console.log(self.types); 
+           // setTimeout(()=>{
+              self.loadUserTypes(self.types);
+           //  },5000);   
+            return  JSON.parse(this.responseText);
           }
         });   
 
@@ -281,19 +286,19 @@ class PostForm extends Component {
   }
 
   //Carga drop down de categorias
-  loadUserTypes() {
+  loadUserTypes(fTypes) {
     var self= this;   
  
-    setTimeout(function() {
+    //setTimeout(function() {
       //self.setState({types:  self.types});
-     // console.log(self.types)  ; 
-        if(self.state.types!=''){
-         
-        return self.state.types.map(user => (
+      //console.log(fTypes)  ; 
+        if(fTypes!=''){         
+        return( fTypes.map(user => (
           <Picker.Item key={user.id} label={user.name} value={user.slug} />
         ))
+      );
       }
-    }, 3000); 
+   // }, 3000); 
   
 }
 
@@ -348,6 +353,35 @@ class PostForm extends Component {
 
   }
 
+  /******************** */
+
+  fDatas(){
+    var self = this;
+    var data = "username=acceso&password=0995480563";
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+    
+    xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === 4) {
+        //console.log(this.responseText);
+       // self.fillText(JSON.parse(this.responseText).token);
+       self.cBack(this.responseText);
+       var cat=  self.fillCategory();     
+        
+      }
+    });
+    
+    xhr.open("POST", "https://crearstore.com/wp-json/jwt-auth/v1/token");
+    xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("cache-control", "no-cache");
+    xhr.setRequestHeader("postman-token", "f44d488a-4ee4-a32c-1324-fad1c2d837ca");
+    
+    xhr.send(data);
+  }
+
+  /*************************** */
+
    
   fetchDatas(){
     var self = this;
@@ -396,7 +430,7 @@ class PostForm extends Component {
           duration: 3000,
           position: "top"
         });
-        
+
       }
     });   
 
@@ -481,12 +515,13 @@ class PostForm extends Component {
 
             <Text style={styles.separation}></Text>   
            
+          
             <Picker
               selectedValue={this.state.selectedUserType}
               onValueChange={(itemValue, itemIndex) =>
               this.setState({selectedUserType: itemValue})}>
-              {this.loadUserTypes()}
-            </Picker> 
+              {this.fDatas()}
+              </Picker>
 
            <Text style={styles.separation}></Text>   
 
