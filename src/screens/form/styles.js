@@ -25,6 +25,16 @@ export default {
     margin:25
   },
 
+  dropdown_2: {
+    alignSelf: 'flex-end',
+    width: 150,
+    marginTop: 32,
+    right: 8,
+    borderWidth: 0,
+    borderRadius: 3,
+    backgroundColor: 'cornflowerblue',
+  },
+
 
  
 };

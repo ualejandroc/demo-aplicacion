@@ -29,6 +29,11 @@ import  Captures  from "./captures";
 
 import CustomWebView from 'react-native-webview-android';
 
+//
+
+import ModalDropdown from 'react-native-modal-dropdown';
+
+import { Dropdown } from 'react-native-material-dropdown';
 
 GLOBAL.fetch = fetch;
 
@@ -37,6 +42,30 @@ GLOBAL.fetch = fetch;
 const logo = require("../../../assets/logo.png");
 const cardImage = require("../../../assets/drawer-cover.png");
 /************ */
+
+const DEMO_OPTIONS_1 = ['option 1', 'option 2', 'option 3', 'option 4', 'option 5', 'option 6', 'option 7', 'option 8', 'option 9'];
+const DEMO_OPTIONS_2 = [
+  {"name": "Rex", "age": 30},
+  {"name": "Mary", "age": 25},
+  {"name": "John", "age": 41},
+  {"name": "Jim", "age": 22},
+  {"name": "Susan", "age": 52},
+  {"name": "Brent", "age": 33},
+  {"name": "Alex", "age": 16},
+  {"name": "Ian", "age": 20},
+  {"name": "Phil", "age": 24},
+];
+
+
+let data = [{
+  value: 'Banana',
+}, {
+  value: 'Mango',
+}, {
+  value: 'Pear',
+}];
+
+/************************* */
 
 
 
@@ -162,10 +191,12 @@ class PostForm extends Component {
         xhr.addEventListener("readystatechange", function () {
           if (this.readyState === 4) {
             self.types= JSON.parse(this.responseText) ;
-            //console.log(self.types); 
+             
            // setTimeout(()=>{
               self.loadUserTypes(self.types);
            //  },5000);   
+            self.setState({types:JSON.parse(this.responseText)});            
+          
             return  JSON.parse(this.responseText);
           }
         });   
@@ -288,11 +319,16 @@ class PostForm extends Component {
   //Carga drop down de categorias
   loadUserTypes(fTypes) {
     var self= this;   
- 
+    //console.log(self.state.types);
     //setTimeout(function() {
       //self.setState({types:  self.types});
       //console.log(fTypes)  ; 
-        if(fTypes!=''){         
+        if(fTypes!=''){     
+             fTypes.map(user => (
+         self.types=   <Picker.Item key={user.id} label={user.name} value={user.slug} />
+          ));
+          console.log( self.types);
+
         return( fTypes.map(user => (
           <Picker.Item key={user.id} label={user.name} value={user.slug} />
         ))
@@ -368,7 +404,7 @@ class PostForm extends Component {
        // self.fillText(JSON.parse(this.responseText).token);
        self.cBack(this.responseText);
        var cat=  self.fillCategory();     
-        
+        return self.types;
       }
     });
     
@@ -522,6 +558,15 @@ class PostForm extends Component {
               this.setState({selectedUserType: itemValue})}>
               {this.fDatas()}
               </Picker>
+
+               <ModalDropdown style={styles.dropdown_2}
+                           options={DEMO_OPTIONS_1}
+                   />
+
+                   <Dropdown
+                    label='Favorite Fruit'
+                    data={data}
+                  />
 
            <Text style={styles.separation}></Text>   
 
