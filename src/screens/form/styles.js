@@ -8,17 +8,22 @@ export default {
   },
 
   formBack:{
-    backgroundColor:  "#eff3f6"
+    backgroundColor:  "#fff"
   },
 
   containers: {
     flex: 1,
-    height:60,  
+    height:90,  
     flexDirection: "row",
     justifyContent: "space-around",
     paddingVertical: 10,
     backgroundColor: "#eee"
-  }
+  },
+
+  input:{
+    backgroundColor:  "#EEEEEE",
+    margin:25
+  },
 
 
  

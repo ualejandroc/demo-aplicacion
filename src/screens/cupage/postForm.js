@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Image, Dimensions, AsyncStorage } from "react-native";
 import {
   Container,
   Header,
@@ -15,7 +16,8 @@ import {
   Form,
   Text,
   Textarea,
-  Toast ,
+  Toast,
+  Picker
 } from "native-base";
 
 import Api from "../../products/WooCommerce/Woocommerce";
@@ -26,10 +28,13 @@ import  Captures  from "./captures";
 
 import CustomWebView from 'react-native-webview-android';
 
+
 GLOBAL.fetch = fetch;
 
 /************ */
 
+const logo = require("../../../assets/logo.png");
+const cardImage = require("../../../assets/drawer-cover.png");
 /************ */
 
 
@@ -45,17 +50,44 @@ class PostForm extends Component {
    this.HTML = `
     <html>
      <head>
-       
+       <style>
+       input[type="file"] {
+            display: none;
+        }
+        .custom-file-upload {
+            border: 1px solid #ccc;
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+        #formImg{ 
+          display: flex;
+          justify-content: center;
+          background-color: #fff;
+        
+        }
+        body{
+          background-color: #fff;
+        }
+        
+        </style>
      </head>
      <body>
     <form enctype="multipart/form-data" id="formImg"
     action="http://crearstore.com/fila/conn.php" method="POST"
      target="request">
+      <label for="file-5"class="custom-file-upload " id="custom-file">
+        <figure>
+        <svg xmlns="http://www.w3.org/2000/svg" class="iborrainputfile" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path></svg>
+        </figure>
+        <span class="iborrainputfile">Seleccionar archivo</span>
+      </label>
         <input id="imgs" name="uploadedfile" type="file" /> 
         <input id="ImgName" name="ImgName" type="hidden" value="${named}">  
         </form>
-           <image id="resImg" src='http://www.idiomaspc.com/grafik/franzoesisch150.jpg' />
-           <div id="response">${named}</div>
+        <br/>
+           <image id="resImg" src='' />
+        <div id="response">${named}</div>
        
         </body>
         </html>
@@ -63,36 +95,166 @@ class PostForm extends Component {
 
     this.imgSrc='http://crearstore.com/fila/load/'+named + '.jpg';
 
+    this.token='';
+
+    this.types ='';
+ 
+    
+     //this.fetchDatas(this.cBack,this.fillCategory);
+
+     
+     
   }
 
-state = {
-  card: {pic:''},
-  resp:'',
-  name: 'Premium Quality',
-  type: 'simple',
-  regular_price: '45.99',
-  description: 'Pellentesque habitant  tristiqueo.',
-  short_description: 'Pellentesque habitant senectus et netus et malesuada fames ac turpis egestas.',
-  categories: [
-    {
-      id: 9
-    },
-    {
-      id: 14
-    }
-  ],
-  images: [{
-      src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg',
-      position: 0
-    },
-    {
-      src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_back.jpg',
-      position: 1
-    }
-  ],
-  dataModel:''
+  state = {
+    types:'',
+    selectedUserType:'',
+  
+    card: {pic:''},
+    resp:'',
+    name: 'Premium Quality',
+    type: 'simple',
+    regular_price: '45.99',
+    description: 'Pellentesque habitant  tristiqueo.',
+    short_description: 'Pellentesque habitant senectus et netus et malesuada fames ac turpis egestas.',
+    categories: [
+      {
+        id: 9
+      },
+      {
+        id: 14
+      }
+    ],
+    images: [{
+        src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg',
+        position: 0
+      },
+      {
+        src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_back.jpg',
+        position: 1
+      }
+    ],
+    dataModel:''
+      
+    };
+
+    /*************/
+
+  componentDidMount(){
     
-  };
+    this.fetchDatas(this.cBack);
+    
+  }
+
+      cBack(responseText){
+        this.token=JSON.parse(responseText).token; 
+      }
+
+
+      fillCategory(){
+        var self = this;
+        var token= self.token; 
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+          if (this.readyState === 4) {
+            self.types= JSON.parse(this.responseText) ;
+            //console.log(self.types);   
+          }
+        });   
+
+        xhr.open("GET", "https://crearstore.com/wp-json/wc/v2/products/categories");
+        xhr.setRequestHeader("Content-Type", "multipart/form-data");
+        xhr.setRequestHeader("authorization", "Bearer "+ token);
+        xhr.setRequestHeader("Cache-Control", "no-cache");
+        xhr.setRequestHeader("Postman-Token", "467a136a-44be-41d2-8265-cae0afa8fe3f");
+
+        xhr.send();  
+      }
+
+      /***************************/
+
+      fillCategories(){
+        var self = this;
+        var token= self.token; 
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+          if (this.readyState === 4) {
+            self.types= JSON.parse(this.responseText) ;
+            //console.log(self.types);
+           
+          }
+        });   
+
+        xhr.open("GET", "https://crearstore.com/wp-json/wc/v2/products/categories");
+        xhr.setRequestHeader("Content-Type", "multipart/form-data");
+        xhr.setRequestHeader("authorization", "Bearer "+ token);
+        xhr.setRequestHeader("Cache-Control", "no-cache");
+        xhr.setRequestHeader("Postman-Token", "467a136a-44be-41d2-8265-cae0afa8fe3f");
+
+        xhr.send();  
+      }
+
+      tPromise(){
+        var self = this;
+        var token= self.token; 
+
+      const  promise = new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+
+        xhr.withCredentials = true;
+
+        xhr.open("GET", "https://crearstore.com/wp-json/wc/v2/products/categories");
+        xhr.setRequestHeader("Content-Type", "multipart/form-data");
+        xhr.setRequestHeader("authorization", "Bearer "+ token);
+        xhr.setRequestHeader("Cache-Control", "no-cache");
+        xhr.setRequestHeader("Postman-Token", "467a136a-44be-41d2-8265-cae0afa8fe3f");
+
+       /* xhr.onload = () => {
+          if (xhr.status === 200) {
+            resolve(xhr.response); // we got data here, so resolve the Promise
+          } else {
+            reject(Error(xhr.statusText)); // status is not 200 OK, so reject
+          }
+        };*/
+
+
+        xhr.addEventListener("readystatechange", function () {
+          if (this.readyState === 4) {
+
+            resolve(this.responseText) ;
+            //console.log(self.types);   
+          } else {
+            reject(Error(xhr.statusText)); // status is not 200 OK, so reject
+          }
+        }); 
+
+        xhr.onerror = () => {
+          reject(Error('Error fetching data.')); // error occurred, reject the  Promise
+        };
+
+        xhr.send();  
+      });
+      
+            
+      promise.then((data) => {
+        console.log('Got data! Promise fulfilled.');
+        console.log( JSON.parse(data.responseText) );
+      }, (error) => {
+        console.log('Promise rejected.');
+        console.log(error.message);
+      });
+
+    }
+
+/********************************/
+
+
    dataModel={
     name: 'Premium Quality',
     type: 'simple',
@@ -117,6 +279,23 @@ state = {
       }
     ]
   }
+
+  //Carga drop down de categorias
+  loadUserTypes() {
+    var self= this;   
+ 
+    setTimeout(function() {
+      //self.setState({types:  self.types});
+     // console.log(self.types)  ; 
+        if(self.state.types!=''){
+         
+        return self.state.types.map(user => (
+          <Picker.Item key={user.id} label={user.name} value={user.slug} />
+        ))
+      }
+    }, 3000); 
+  
+}
 
 
   buildFormModel(){
@@ -208,15 +387,16 @@ state = {
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === 4) {
         self.setState({
-          card: { pic: JSON.stringify(this.responseText) }
-        
+          card: { pic: JSON.stringify(this.responseText) }        
         });
+
         Toast.show({
           text: "Producto Guardado!",
           buttonText: "Okay",
           duration: 3000,
           position: "top"
         });
+        
       }
     });   
 
@@ -249,15 +429,71 @@ state = {
         </Header>
 
         <Content  style={styles.formBack}>
+
+         {/*}   <Card style={styles.mb}>
+            <CardItem bordered>
+              <Left>
+                <Thumbnail source={logo} />
+                <Body>
+                  <Text>NativeBase</Text>
+                  <Text note>April 15, 2016</Text>
+                </Body>
+              </Left>
+            </CardItem>
+
+            <CardItem>
+              <Body>
+                <Image
+                  style={{
+                    alignSelf: "center",
+                    height: 150,
+                    resizeMode: "cover",
+                   // width: (100%) / 1.18,
+                    marginVertical: 5
+                  }}
+                  source={cardImage}
+                />
+                <Text>
+                  NativeBase is a free and source framework that enable
+                  developers to build high-quality mobile apps using React
+                  Native iOS and Android apps with a fusion of ES6. NativeBase
+                  builds a layer on top of React Native that provides you with
+                  basic set of components for mobile application development.
+                </Text>
+              </Body>
+            </CardItem>
+            <CardItem style={{ paddingVertical: 0 }}>
+              <Left>
+                <Button transparent>
+                  <Icon name="logo-github" />
+                  <Text>4,923 stars</Text>
+                </Button>
+              </Left>
+            </CardItem>
+          </Card>     */}  
+
           <Form>
+          <Text style={styles.separation}></Text>
             <Item inlineLabel>
               <Label>Titulo de Producto</Label>              
             </Item>
-            <Input  onChangeText={(text) => this.setState({name: text})} />
+            <Input style={styles.input} onChangeText={(text) => this.setState({name: text})} />
 
-            <Text style={styles.separation}></Text>       
-          <Text style={styles.separation}></Text>
-          
+            <Text style={styles.separation}></Text>   
+           
+            <Picker
+              selectedValue={this.state.selectedUserType}
+              onValueChange={(itemValue, itemIndex) =>
+              this.setState({selectedUserType: itemValue})}>
+              {this.loadUserTypes()}
+            </Picker> 
+
+           <Text style={styles.separation}></Text>   
+
+          <Item inlineLabel>
+              <Label>Imagen de Producto</Label>              
+            </Item>
+            <Text style={styles.separation}></Text>
           <CustomWebView 
                 style={styles.containers}
                 source={{html: this.HTML}}
@@ -276,53 +512,76 @@ state = {
                       }
                     });
 
-                    xhr.open("POST", "http://crearstore.com/fila/conn.php",false);
-                
+                    xhr.open("POST", "http://crearstore.com/fila/conn.php",false);                
                     xhr.send(new FormData(inputForm)); 
-
                     return txtImg;
                   
-                  };
-                  
+                  };                  
                 
                   document.querySelector('#imgs').addEventListener('change', async function(event) {
-                    var resImg = sendData();
-                
-                    alert(JSON.parse(resImg).image_url);
+                    var resImg = sendData();                
+                    alert(JSON.parse(resImg).image_url);                  
+                    });
+
+                    function simulateClick() {
+                      var event = new MouseEvent('click', {
+                        'view': window,
+                        'bubbles': true,
+                        'cancelable': true
+                      });
+                      var cb = document.querySelector('#imgs'); 
+                      var canceled = !cb.dispatchEvent(event);
+                      if (canceled) {
+                      } else {                      
                   
-                });` } />    
+                      }
+                    }                                      
+                    
+                    document.querySelector('#custom-file').addEventListener('click', async function(event) {                     
+                      simulateClick();                            
+                      }); ` 
+                  } />    
 
              <Text style={styles.separation}></Text>
              <Item inlineLabel>
               <Label>Precio</Label>              
             </Item>
-            <Input  onChangeText={(text) => this.setState({regular_price: text})} />
+            <Input style={styles.input}  
+            keyboardType={'numeric'} 
+            onChangeText={(text) => this.setState({regular_price: text})} />
 
-            <Text style={styles.separation}></Text>           
-
+            <Text style={styles.separation}></Text>      
 
             <Text style={styles.separation}></Text>
-              <Label               
-              floatingLabel >Descripcion corta</Label>              
+
+             <Item inlineLabel>
+              <Label   
+               >Descripcion corta</Label> 
+               </Item> 
+              <Text style={styles.separation}></Text>
+
               <Textarea rowSpan={5}
               onChangeText={(text) => this.setState({short_description: text})} 
               bordered 
-              info placeholder="..." />
+              info placeholder="..." 
+              style={styles.input}  />
             
               <Text style={styles.separation}></Text>
-            
 
 
-              <Label               
-              floatingLabel >Descripcion Detallada</Label>              
+               <Item inlineLabel>
+              <Label   
+               >Descripcion Detallada</Label> 
+               </Item>   
+              <Text style={styles.separation}></Text>
+
               <Textarea rowSpan={5} 
+              style={styles.input} 
              onChangeText={(text) => this.setState({description: text})} 
             bordered info placeholder="..." />
 
-              <Text style={styles.separation}></Text>
-            
-            
-           
+              <Text style={styles.separation}></Text>          
+                       
             {/* <Item>
               <Icon active name="home" />
               <Input placeholder="Icon Textbox" />
@@ -341,7 +600,7 @@ state = {
           <Button block 
 
           underlayColor='#ccc'
-          onPress={() => { this.fetchDatas( ); } }
+          onPress={() => { this.fillText( ); } }
           style={{ margin: 15, marginTop: 50 }}
           >
             <Text>Guardar</Text>
