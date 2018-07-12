@@ -35,6 +35,16 @@ export default {
     backgroundColor: 'cornflowerblue',
   },
 
+  autocomplete: {
+    alignSelf: "stretch",
+    height: 50,
+    margin: 10,
+    marginTop: 50,
+    backgroundColor: "#FFF",
+    borderColor: "lightblue",
+    borderWidth: 1
+  },
+
 
  
 };

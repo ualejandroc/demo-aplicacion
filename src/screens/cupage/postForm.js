@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Image, Dimensions, AsyncStorage } from "react-native";
+import { Image, Dimensions, AsyncStorage, TouchableOpacity } from "react-native";
 import {
   Container,
   Header,
@@ -35,6 +35,9 @@ import ModalDropdown from 'react-native-modal-dropdown';
 
 import { Dropdown } from 'react-native-material-dropdown';
 
+//
+import Autocomplete from 'react-native-autocomplete-input';
+
 GLOBAL.fetch = fetch;
 
 /************ */
@@ -64,6 +67,9 @@ let data = [{
 }, {
   value: 'Pear',
 }];
+//
+const API = 'https://swapi.co/api';
+const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 
 /************************* */
 
@@ -130,13 +136,18 @@ class PostForm extends Component {
     this.types ='';
  
     
-     //this.fetchDatas(this.cBack,this.fillCategory);
-
-     
+     //this.fetchDatas(this.cBack,this.fillCategory);    
      
   }
 
   state = {
+
+    films: [],
+      query: '',
+//
+    fDrop: [ {
+      value: 'Pear',
+    }],
     types:'',
     selectedUserType:'',
   
@@ -168,18 +179,129 @@ class PostForm extends Component {
       
     };
 
+    /********************************/
+
+
+   dataModel={
+    name: 'Premium Quality',
+    type: 'simple',
+    regular_price: '45.99',
+    description: 'Pellentesque habitant  tristiqueo.',
+    short_description: 'Pellentesque habitant senectus et netus et malesuada fames ac turpis egestas.',
+    categories: [
+      {
+        id: 9
+      },
+      {
+        id: 14
+      }
+    ],
+    images: [{
+        src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg',
+        position: 0
+      },
+      {
+        src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_back.jpg',
+        position: 1
+      }
+    ]
+  }
+
     /*************/
 
-  componentDidMount(){
-    
-    //this.fDatas();
-    
-  }
+    componentDidMount() {
+    /*  fetch(`${API}/films/`).then(res => res.json()).then((json) => {
+        const { results: films } = json;
+        this.setState({ films });
+      });*/
+
+      var self = this;
+      var data = "username=acceso&password=0995480563";
+  
+      var xhr = new XMLHttpRequest();
+      xhr.withCredentials = true;
+      
+      xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+          
+         // self.fillText(JSON.parse(this.responseText).token);
+        
+         var token= JSON.parse(this.responseText).token; 
+         var xr = new XMLHttpRequest();
+        xr.withCredentials = true;
+
+        xr.addEventListener("readystatechange", function () {
+          if (this.readyState === 4) {
+            self.types= JSON.parse(this.responseText) ;
+             
+              
+            self.setState({types:JSON.parse(this.responseText)});
+            //console.log(self.state.types);            
+          
+           // return  JSON.parse(this.responseText);
+          }
+        });   
+
+        xr.open("GET", "https://crearstore.com/wp-json/wc/v2/products/categories");
+        xr.setRequestHeader("Content-Type", "multipart/form-data");
+        xr.setRequestHeader("authorization", "Bearer "+ token);
+        xr.setRequestHeader("Cache-Control", "no-cache");
+        xr.setRequestHeader("Postman-Token", "467a136a-44be-41d2-8265-cae0afa8fe3f");
+
+        xr.send();  
+         
+        }
+      });
+      
+      xhr.open("POST", "https://crearstore.com/wp-json/jwt-auth/v1/token");
+      xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+      xhr.setRequestHeader("cache-control", "no-cache");
+      xhr.setRequestHeader("postman-token", "f44d488a-4ee4-a32c-1324-fad1c2d837ca");
+      
+      xhr.send(data);
+     
+  
+    }
+  
+    findFilm(query) {
+      if (query === '') {
+        return [];
+      }
+  /*
+      const { films } = this.state;
+      const regex = new RegExp(`${query.trim()}`, 'i');
+      return films.filter(film => film.title.search(regex) >= 0);
+      */
+
+     const { types } = this.state;
+     const regex = new RegExp(`${query.trim()}`, 'i');
+     return types.filter(types => types.name.search(regex) >= 0);
+    }
+
+     renderFilm(film) {
+      //const { title, director, opening_crawl } = film;
+
+      const { name, id, slug } = film;
+      
+  
+      return (
+        <View>
+         {/* <Text style={styles.titleText}> {title}</Text>
+          <Text style={styles.directorText}>({director})</Text>
+      <Text style={styles.openingText}>{opening_crawl}</Text> */}
+      <Text style={styles.titleText}> {name}</Text>
+          <Text style={styles.directorText}>({id})</Text>
+          <Text style={styles.openingText}>{slug}</Text>
+
+        </View>
+      );
+    }
+
+    /***************** */
 
       cBack(responseText){
         this.token=JSON.parse(responseText).token; 
       }
-
 
       async fillCategory(){
         var self = this;
@@ -288,32 +410,25 @@ class PostForm extends Component {
 
     }
 
-/********************************/
 
 
-   dataModel={
-    name: 'Premium Quality',
-    type: 'simple',
-    regular_price: '45.99',
-    description: 'Pellentesque habitant  tristiqueo.',
-    short_description: 'Pellentesque habitant senectus et netus et malesuada fames ac turpis egestas.',
-    categories: [
-      {
-        id: 9
-      },
-      {
-        id: 14
-      }
-    ],
-    images: [{
-        src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg',
-        position: 0
-      },
-      {
-        src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_back.jpg',
-        position: 1
-      }
-    ]
+  /******Funciones *** */
+
+  componentDidUpdate(){
+    //this.setState({fDrop: this.fillDrop()});
+  }
+
+  fillDrop(){
+    let data = [{
+      value: 'Banana',
+    }, {
+      value: 'Mango',
+    }, {
+      value: 'Pear',
+    }];
+    //setTimeout(function() {
+    return data;
+     //}, 7000); 
   }
 
   //Carga drop down de categorias
@@ -327,7 +442,7 @@ class PostForm extends Component {
              fTypes.map(user => (
          self.types=   <Picker.Item key={user.id} label={user.name} value={user.slug} />
           ));
-          console.log( self.types);
+         // console.log( self.types);
 
         return( fTypes.map(user => (
           <Picker.Item key={user.id} label={user.name} value={user.slug} />
@@ -428,7 +543,7 @@ class PostForm extends Component {
     
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === 4) {
-        console.log(this.responseText);
+        //console.log(this.responseText);
         self.fillText(JSON.parse(this.responseText).token);
         
       }
@@ -484,6 +599,12 @@ class PostForm extends Component {
 
 
   render() {
+
+    const { query } = this.state;
+    const films = this.findFilm(query);
+    const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
+
+
     return (
       <Container style={styles.container}>
         <Header>
@@ -559,15 +680,39 @@ class PostForm extends Component {
               {this.fDatas()}
               </Picker>
 
-               <ModalDropdown style={styles.dropdown_2}
-                           options={DEMO_OPTIONS_1}
-                   />
+            <View style={styles.container}>
+              <Autocomplete
+                autoCapitalize="none"
+                autoCorrect={false}
+                containerStyle={styles.autocompleteContainer}
+                data={ films}
+                defaultValue={query}
+                onChangeText={text => this.setState({ query: text })}
+                placeholder="Enter Star Wars film title"
+                renderItem={({ name, id }) => (
+                  <TouchableOpacity onPress={() => this.setState({ query: name })}> 
+                    <Text style={styles.itemText}>
+                      {name} ({id})  
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              />
+              <View style={styles.descriptionContainer}>
+                {films.length > 0 ? (
+                  this.renderFilm(films[0])
+                ) : (
+                  <Text style={styles.infoText}>
+                    Enter Title of a Star Wars movie
+                  </Text>
+                )}
+              </View>
+            </View>
 
                    <Dropdown
                     label='Favorite Fruit'
-                    data={data}
+                    data={this.state.fDrop}
                   />
-
+                  
            <Text style={styles.separation}></Text>   
 
           <Item inlineLabel>
