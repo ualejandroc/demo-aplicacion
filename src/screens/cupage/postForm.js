@@ -29,13 +29,6 @@ import  Captures  from "./captures";
 
 import CustomWebView from 'react-native-webview-android';
 
-//
-
-import ModalDropdown from 'react-native-modal-dropdown';
-
-import { Dropdown } from 'react-native-material-dropdown';
-
-//
 import Autocomplete from 'react-native-autocomplete-input';
 
 GLOBAL.fetch = fetch;
@@ -45,35 +38,6 @@ GLOBAL.fetch = fetch;
 const logo = require("../../../assets/logo.png");
 const cardImage = require("../../../assets/drawer-cover.png");
 /************ */
-
-const DEMO_OPTIONS_1 = ['option 1', 'option 2', 'option 3', 'option 4', 'option 5', 'option 6', 'option 7', 'option 8', 'option 9'];
-const DEMO_OPTIONS_2 = [
-  {"name": "Rex", "age": 30},
-  {"name": "Mary", "age": 25},
-  {"name": "John", "age": 41},
-  {"name": "Jim", "age": 22},
-  {"name": "Susan", "age": 52},
-  {"name": "Brent", "age": 33},
-  {"name": "Alex", "age": 16},
-  {"name": "Ian", "age": 20},
-  {"name": "Phil", "age": 24},
-];
-
-
-let data = [{
-  value: 'Banana',
-}, {
-  value: 'Mango',
-}, {
-  value: 'Pear',
-}];
-//
-const API = 'https://swapi.co/api';
-const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
-
-/************************* */
-
-
 
 class PostForm extends Component {
 
@@ -134,9 +98,7 @@ class PostForm extends Component {
     this.token='';
 
     this.types ='';
- 
-    
-     //this.fetchDatas(this.cBack,this.fillCategory);    
+  
      
   }
 
@@ -144,10 +106,8 @@ class PostForm extends Component {
 
     films: [],
       query: '',
-//
-    fDrop: [ {
-      value: 'Pear',
-    }],
+
+
     types:'',
     selectedUserType:'',
   
@@ -358,99 +318,28 @@ class PostForm extends Component {
         xhr.send();  
       }
 
-      tPromise(){
-        var self = this;
-        var token= self.token; 
-
-      const  promise = new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-
-        xhr.withCredentials = true;
-
-        xhr.open("GET", "https://crearstore.com/wp-json/wc/v2/products/categories");
-        xhr.setRequestHeader("Content-Type", "multipart/form-data");
-        xhr.setRequestHeader("authorization", "Bearer "+ token);
-        xhr.setRequestHeader("Cache-Control", "no-cache");
-        xhr.setRequestHeader("Postman-Token", "467a136a-44be-41d2-8265-cae0afa8fe3f");
-
-       /* xhr.onload = () => {
-          if (xhr.status === 200) {
-            resolve(xhr.response); // we got data here, so resolve the Promise
-          } else {
-            reject(Error(xhr.statusText)); // status is not 200 OK, so reject
-          }
-        };*/
-
-
-        xhr.addEventListener("readystatechange", function () {
-          if (this.readyState === 4) {
-
-            resolve(this.responseText) ;
-            //console.log(self.types);   
-          } else {
-            reject(Error(xhr.statusText)); // status is not 200 OK, so reject
-          }
-        }); 
-
-        xhr.onerror = () => {
-          reject(Error('Error fetching data.')); // error occurred, reject the  Promise
-        };
-
-        xhr.send();  
-      });
-      
-            
-      promise.then((data) => {
-        console.log('Got data! Promise fulfilled.');
-        console.log( JSON.parse(data.responseText) );
-      }, (error) => {
-        console.log('Promise rejected.');
-        console.log(error.message);
-      });
-
-    }
-
-
-
+    
   /******Funciones *** */
 
   componentDidUpdate(){
-    //this.setState({fDrop: this.fillDrop()});
   }
 
-  fillDrop(){
-    let data = [{
-      value: 'Banana',
-    }, {
-      value: 'Mango',
-    }, {
-      value: 'Pear',
-    }];
-    //setTimeout(function() {
-    return data;
-     //}, 7000); 
-  }
 
   //Carga drop down de categorias
-  loadUserTypes(fTypes) {
+  loadUserTypes() {
     var self= this;   
-    //console.log(self.state.types);
-    //setTimeout(function() {
-      //self.setState({types:  self.types});
-      //console.log(fTypes)  ; 
-        if(fTypes!=''){     
-             fTypes.map(user => (
+   
+        if(self.state.types!=''){     
+          self.state.types.map(user => (
          self.types=   <Picker.Item key={user.id} label={user.name} value={user.slug} />
           ));
-         // console.log( self.types);
+        
 
-        return( fTypes.map(user => (
+        return( self.state.types.map(user => (
           <Picker.Item key={user.id} label={user.name} value={user.slug} />
         ))
       );
-      }
-   // }, 3000); 
-  
+      }  
 }
 
 
@@ -506,32 +395,6 @@ class PostForm extends Component {
 
   /******************** */
 
-  fDatas(){
-    var self = this;
-    var data = "username=acceso&password=0995480563";
-
-    var xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
-    
-    xhr.addEventListener("readystatechange", function () {
-      if (this.readyState === 4) {
-        //console.log(this.responseText);
-       // self.fillText(JSON.parse(this.responseText).token);
-       self.cBack(this.responseText);
-       var cat=  self.fillCategory();     
-        return self.types;
-      }
-    });
-    
-    xhr.open("POST", "https://crearstore.com/wp-json/jwt-auth/v1/token");
-    xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
-    xhr.setRequestHeader("cache-control", "no-cache");
-    xhr.setRequestHeader("postman-token", "f44d488a-4ee4-a32c-1324-fad1c2d837ca");
-    
-    xhr.send(data);
-  }
-
-  /*************************** */
 
    
   fetchDatas(){
@@ -619,49 +482,7 @@ class PostForm extends Component {
           <Right />
         </Header>
 
-        <Content  style={styles.formBack}>
-
-         {/*}   <Card style={styles.mb}>
-            <CardItem bordered>
-              <Left>
-                <Thumbnail source={logo} />
-                <Body>
-                  <Text>NativeBase</Text>
-                  <Text note>April 15, 2016</Text>
-                </Body>
-              </Left>
-            </CardItem>
-
-            <CardItem>
-              <Body>
-                <Image
-                  style={{
-                    alignSelf: "center",
-                    height: 150,
-                    resizeMode: "cover",
-                   // width: (100%) / 1.18,
-                    marginVertical: 5
-                  }}
-                  source={cardImage}
-                />
-                <Text>
-                  NativeBase is a free and source framework that enable
-                  developers to build high-quality mobile apps using React
-                  Native iOS and Android apps with a fusion of ES6. NativeBase
-                  builds a layer on top of React Native that provides you with
-                  basic set of components for mobile application development.
-                </Text>
-              </Body>
-            </CardItem>
-            <CardItem style={{ paddingVertical: 0 }}>
-              <Left>
-                <Button transparent>
-                  <Icon name="logo-github" />
-                  <Text>4,923 stars</Text>
-                </Button>
-              </Left>
-            </CardItem>
-          </Card>     */}  
+        <Content  style={styles.formBack}>         
 
           <Form>
           <Text style={styles.separation}></Text>
@@ -672,13 +493,18 @@ class PostForm extends Component {
 
             <Text style={styles.separation}></Text>   
            
-          
+            <Item inlineLabel>
+              <Label>Categoria de Producto</Label>              
+            </Item>
+
             <Picker
               selectedValue={this.state.selectedUserType}
               onValueChange={(itemValue, itemIndex) =>
               this.setState({selectedUserType: itemValue})}>
-              {this.fDatas()}
+              {this.loadUserTypes()}
               </Picker>
+
+              <Text style={styles.separation}></Text> 
 
             <View style={styles.container}>
               <Autocomplete
@@ -707,11 +533,7 @@ class PostForm extends Component {
                 )}
               </View>
             </View>
-
-                   <Dropdown
-                    label='Favorite Fruit'
-                    data={this.state.fDrop}
-                  />
+                  
                   
            <Text style={styles.separation}></Text>   
 
