@@ -109,7 +109,7 @@ class PostForm extends Component {
 
 
     types:'',
-    selectedUserType:'',
+    selectedCateType:'',
   
     card: {pic:''},
     resp:'',
@@ -175,6 +175,11 @@ class PostForm extends Component {
         this.setState({ films });
       });*/
 
+      this.getCategory();    
+  
+    }
+  
+    getCategory(){
       var self = this;
       var data = "username=acceso&password=0995480563";
   
@@ -219,10 +224,9 @@ class PostForm extends Component {
       xhr.setRequestHeader("postman-token", "f44d488a-4ee4-a32c-1324-fad1c2d837ca");
       
       xhr.send(data);
-     
-  
     }
-  
+
+
     findFilm(query) {
       if (query === '') {
         return [];
@@ -331,12 +335,12 @@ class PostForm extends Component {
    
         if(self.state.types!=''){     
           self.state.types.map(user => (
-         self.types=   <Picker.Item key={user.id} label={user.name} value={user.slug} />
+         self.types=   <Picker.Item value={user.id} label={user.name} key={user.slug} />
           ));
         
 
         return( self.state.types.map(user => (
-          <Picker.Item key={user.id} label={user.name} value={user.slug} />
+          <Picker.Item value={user.id} label={user.name} key={user.slug} />
         ))
       );
       }  
@@ -350,7 +354,7 @@ class PostForm extends Component {
     this.dataModel.short_description=this.state.short_description;
     this.dataModel.description=this.state.description;
     this.dataModel.regular_price=this.state.regular_price;
-   // this.dataModel['categories'][0].id = 0;
+    this.dataModel['categories'] = this.state.categories;
 
 
     var model= this.dataModel;
@@ -498,11 +502,27 @@ class PostForm extends Component {
             </Item>
 
             <Picker
-              selectedValue={this.state.selectedUserType}
-              onValueChange={(itemValue, itemIndex) =>
-              this.setState({selectedUserType: itemValue})}>
+              selectedValue={this.state.selectedCateType}
+              onValueChange={(itemValue, itemIndex) =>{
+                let cat= [];
+              cat.push({id:0});
+              cat[0]={id:itemValue};
+              this.setState({selectedCateType: itemValue});
+              this.state.categories=cat;
+                         
+                }
+              }>
               {this.loadUserTypes()}
               </Picker>
+
+                <Button block 
+
+              underlayColor='#ccc'
+              onPress={() => {  console.log(this.buildFormModel( )) } }
+              style={{ margin: 15, marginTop: 50 }}
+              >
+                <Text>ver</Text>
+              </Button>
 
               <Text style={styles.separation}></Text> 
 
@@ -644,6 +664,7 @@ class PostForm extends Component {
             </Item>
             */}
           </Form>
+          
           <Button block 
 
           underlayColor='#ccc'
