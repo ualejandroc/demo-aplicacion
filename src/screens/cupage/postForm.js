@@ -187,9 +187,7 @@ class PostForm extends Component {
       xhr.withCredentials = true;
       
       xhr.addEventListener("readystatechange", function () {
-        if (this.readyState === 4) {
-          
-         // self.fillText(JSON.parse(this.responseText).token);
+        if (this.readyState === 4) {          
         
          var token= JSON.parse(this.responseText).token; 
          var xr = new XMLHttpRequest();
@@ -201,13 +199,11 @@ class PostForm extends Component {
              
               
             self.setState({types:JSON.parse(this.responseText)});
-            //console.log(self.state.types);            
           
-           // return  JSON.parse(this.responseText);
           }
         });   
 
-        xr.open("GET", "https://crearstore.com/wp-json/wc/v2/products/categories");
+        xr.open("GET", "https://crearstore.com/wp-json/wc/v2/products/categories?per_page=50&");
         xr.setRequestHeader("Content-Type", "multipart/form-data");
         xr.setRequestHeader("authorization", "Bearer "+ token);
         xr.setRequestHeader("Cache-Control", "no-cache");
@@ -231,11 +227,6 @@ class PostForm extends Component {
       if (query === '') {
         return [];
       }
-  /*
-      const { films } = this.state;
-      const regex = new RegExp(`${query.trim()}`, 'i');
-      return films.filter(film => film.title.search(regex) >= 0);
-      */
 
      const { types } = this.state;
      const regex = new RegExp(`${query.trim()}`, 'i');
@@ -243,16 +234,11 @@ class PostForm extends Component {
     }
 
      renderFilm(film) {
-      //const { title, director, opening_crawl } = film;
-
       const { name, id, slug } = film;
-      
-  
+       
       return (
         <View>
-         {/* <Text style={styles.titleText}> {title}</Text>
-          <Text style={styles.directorText}>({director})</Text>
-      <Text style={styles.openingText}>{opening_crawl}</Text> */}
+       
       <Text style={styles.titleText}> {name}</Text>
           <Text style={styles.directorText}>({id})</Text>
           <Text style={styles.openingText}>{slug}</Text>
@@ -308,7 +294,6 @@ class PostForm extends Component {
         xhr.addEventListener("readystatechange", function () {
           if (this.readyState === 4) {
             self.types= JSON.parse(this.responseText) ;
-            //console.log(self.types);
            
           }
         });   
@@ -410,7 +395,6 @@ class PostForm extends Component {
     
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === 4) {
-        //console.log(this.responseText);
         self.fillText(JSON.parse(this.responseText).token);
         
       }
@@ -441,13 +425,36 @@ class PostForm extends Component {
         self.setState({
           card: { pic: JSON.stringify(this.responseText) }        
         });
+        let msg='Producto Guardado!';
+        
 
+        if(JSON.parse( this.responseText).data!=undefined){
+          if(JSON.parse( this.responseText).data.status==400){
+            //msg =JSON.parse(this.responseText).code;
+            msg = "Error al subir imagen, Por favor Elegir una imagen";
+          } else{
+            setTimeout(function(){ 
+              self.props.navigation.goBack();
+            }, 5000);          
+          }
+        } else{
+          setTimeout(function(){ 
+            self.props.navigation.goBack();
+          }, 5000);          
+        }
+        
         Toast.show({
-          text: "Producto Guardado!",
+          text: msg,
           buttonText: "Okay",
-          duration: 3000,
+          duration: 7000,
           position: "top"
         });
+
+        setTimeout(function(){ 
+          self.setState({
+            card: { pic: ''}        
+          });
+         }, 5000);  
 
       }
     });   
@@ -500,8 +507,10 @@ class PostForm extends Component {
             <Item inlineLabel>
               <Label>Categoria de Producto</Label>              
             </Item>
+            <Text style={styles.separation}></Text> 
 
             <Picker
+               style={styles.input} 
               selectedValue={this.state.selectedCateType}
               onValueChange={(itemValue, itemIndex) =>{
                 let cat= [];
@@ -515,18 +524,11 @@ class PostForm extends Component {
               {this.loadUserTypes()}
               </Picker>
 
-                <Button block 
-
-              underlayColor='#ccc'
-              onPress={() => {  console.log(this.buildFormModel( )) } }
-              style={{ margin: 15, marginTop: 50 }}
-              >
-                <Text>ver</Text>
-              </Button>
+              
 
               <Text style={styles.separation}></Text> 
 
-            <View style={styles.container}>
+        {/*    <View style={styles.container}>
               <Autocomplete
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -553,9 +555,8 @@ class PostForm extends Component {
                 )}
               </View>
             </View>
-                  
-                  
-           <Text style={styles.separation}></Text>   
+              */}                  
+  
 
           <Item inlineLabel>
               <Label>Imagen de Producto</Label>              
@@ -649,20 +650,7 @@ class PostForm extends Component {
 
               <Text style={styles.separation}></Text>          
                        
-            {/* <Item>
-              <Icon active name="home" />
-              <Input placeholder="Icon Textbox" />
-            </Item>
-            <Item>
-              <Input placeholder="Icon Alignment in Textbox" />
-              <Icon active name="swap" />
-            </Item>
-
-            <Item floatingLabel last>
-              <Label>Password</Label>
-              <Input secureTextEntry />
-            </Item>
-            */}
+        
           </Form>
           
           <Button block 
