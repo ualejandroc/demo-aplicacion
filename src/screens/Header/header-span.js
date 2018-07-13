@@ -9,7 +9,8 @@ import {
   Left,
   Right,
   Body,
-  Text
+  Text,
+  Fab
 } from "native-base";
 import styles from "./styles";
 
@@ -17,7 +18,9 @@ import Product from "./../../products/Product";
 
 class HeaderSpan extends Component {
 
-
+  state = {
+    active: 'false'
+  };
   
 
   render() {
@@ -44,7 +47,38 @@ class HeaderSpan extends Component {
            
 					<Product />
       
-        
+          <Fab
+            active={this.state.active}
+            direction="up"
+            containerStyle={{ }}
+            style={{ backgroundColor: '#5067FF' }}
+            position="bottomRight"
+            onPress={() => 
+              { this.setState({ active: !this.state.active })
+                this.props.navigation.navigate("PostForm")
+              }
+              
+              }>
+              
+            <Icon name="share" />
+            <Button style={{ backgroundColor: '#34A34F' }}
+            onPress={() => 
+              { 
+                this.props.navigation.navigate("CreateProd")
+              } }
+              
+            
+            >
+              <Icon name="logo-whatsapp" />
+            </Button>
+            <Button style={{ backgroundColor: '#3B5998' }}>
+              <Icon name="logo-facebook" />
+            </Button>
+            <Button disabled style={{ backgroundColor: '#DD5144' }}>
+              <Icon name="mail" />
+            </Button>
+              
+          </Fab>
       
       </Container>
     );
