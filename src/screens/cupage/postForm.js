@@ -98,6 +98,7 @@ class PostForm extends Component {
     this.token='';
 
     this.types ='';
+    
   
      
   }
@@ -168,6 +169,10 @@ class PostForm extends Component {
   }
 
     /*************/
+
+    componentWillUnmount(){
+      
+    }
 
     componentDidMount() {
     /*  fetch(`${API}/films/`).then(res => res.json()).then((json) => {
@@ -483,7 +488,8 @@ class PostForm extends Component {
       <Container style={styles.container}>
         <Header>
           <Left>
-            <Button transparent onPress={() => this.props.navigation.goBack()}>
+            <Button transparent 
+            onPress={() => this.props.navigation.navigate("HeaderSpan")}>
               <Icon name="arrow-back" />
             </Button>
           </Left>

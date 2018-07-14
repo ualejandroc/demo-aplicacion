@@ -10,7 +10,9 @@ import {
   Right,
   Body,
   Text,
-  Fab
+  Fab,
+  Grid,
+  Row
 } from "native-base";
 import styles from "./styles";
 
@@ -26,7 +28,7 @@ class HeaderSpan extends Component {
   render() {
     return (
       <Container style={styles.container}>
-        <Header span>
+        <Header >
           <Left>
             <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon name="arrow-back" />
@@ -37,17 +39,22 @@ class HeaderSpan extends Component {
           </Body>
           <Right />
         </Header>
-        <Content padder>
+       {/*} <Content style={styles.content}>  */}
+
+        <Grid>
+          <Row size={4} style={{ backgroundColor: "#635DB7" }} > 
+          <Product style={styles.contain}>
+					</Product >
+          </Row>
+          
+          
+        </Grid>
           <Text>Productos de la tienda</Text>
   
-					<Product />
-         </Content>
+         
+          
 
-            
-           
-					<Product />
-      
-          <Fab
+            <Fab
             active={this.state.active}
             direction="up"
             containerStyle={{ }}
@@ -65,9 +72,7 @@ class HeaderSpan extends Component {
             onPress={() => 
               { 
                 this.props.navigation.navigate("CreateProd")
-              } }
-              
-            
+              } }                       
             >
               <Icon name="logo-whatsapp" />
             </Button>
@@ -79,6 +84,10 @@ class HeaderSpan extends Component {
             </Button>
               
           </Fab>
+      
+         
+      {/*   </Content>      */}     
+        
       
       </Container>
     );
