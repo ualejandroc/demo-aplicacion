@@ -15,39 +15,16 @@ import {
 } from "native-base";
 import styles from "./styles";
 
-const datas = [
-  {
-    route: "BasicCard",
-    text: "Basic Card"
-  },
-  {
-    route: "NHCardHeaderAndFooter",
-    text: "Card Header & Footer"
-  },
-  {
-    route: "NHCardItemBordered",
-    text: "Bordered CardItem"
-  },
-  {
-    route: "NHCardTransparent",
-    text: "Transparent Card"
-  },
+const datas = [ 
   {
     route: "NHCardItemButton",
     text: "Button CardItem"
   },
   {
-    route: "NHCardList",
-    text: "Card List"
-  },
-  {
     route: "NHCardImage",
     text: "Card Image"
   },
-  {
-    route: "NHCardShowcase",
-    text: "Card Showcase"
-  }
+ 
 ];
 
 class NHCard extends Component {

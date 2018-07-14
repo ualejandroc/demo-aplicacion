@@ -6,52 +6,67 @@ import {
   Content,
   Button,
   Icon,
-  Left,
-  Right,
-  Body,
   List,
   ListItem,
-  Text
+  Text,
+  Thumbnail,
+  Left,
+  Body,
+  Right
 } from "native-base";
+import styles from "../list/styles";
 
+const sankhadeep = require("../../../assets/contacts/sankhadeep.png");
+const supriya = require("../../../assets/contacts/supriya.png");
+const himanshu = require("../../../assets/contacts/himanshu.png");
+const shweta = require("../../../assets/contacts/shweta.png");
+const shruti = require("../../../assets/contacts/shruti.png");
+const shivraj = require("../../../assets/contacts/shivraj.jpg");
 const datas = [
   {
-    route: "RowNB",
-    text: "Row Grid"
+    img: sankhadeep,
+    text: "Sankhadeep",
+    note: "Its time to build a difference . ."
   },
   {
-    route: "ColumnNB",
-    text: "Column Grid"
+    img: supriya,
+    text: "Supriya",
+    note: "One needs courage to be happy and smiling all time . . "
   },
   {
-    route: "NestedGrid",
-    text: "Nested Grid"
+    img: shivraj,
+    text: "Shivraj",
+    note: "Time changes everything . ."
   },
   {
-    route: "CustomRow",
-    text: "Custom Row Size Grid"
+    img: shruti,
+    text: "Shruti",
+    note: "The biggest risk is a missed opportunity !!"
   },
   {
-    route: "CustomCol",
-    text: "Custom Column Size Grid"
+    img: himanshu,
+    text: "Himanshu",
+    note: "Live a life style that matchs your vision"
+  },
+  {
+    img: shweta,
+    text: "Shweta",
+    note: "Failure is temporary, giving up makes it permanent"
   }
 ];
 
 class NHLayout extends Component {
   render() {
     return (
-      <Container style={{ backgroundColor: "#FBFAFA" }}>
+      <Container style={styles.container}>
         <Header>
           <Left>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.navigate("DrawerOpen")}
-            >
-              <Icon name="menu" />
+            <Button transparent onPress={() => this.props.navigation.goBack()}>
+              <Icon name="arrow-back" />
             </Button>
           </Left>
           <Body>
-            <Title>Layout</Title>
+            <Title>List Thumbnail</Title>
           </Body>
           <Right />
         </Header>
@@ -60,17 +75,22 @@ class NHLayout extends Component {
           <List
             dataArray={datas}
             renderRow={data =>
-              <ListItem
-                button
-                onPress={() => this.props.navigation.navigate(data.route)}
-              >
+              <ListItem thumbnail>
                 <Left>
+                  <Thumbnail square size={55} source={data.img} />
+                </Left>
+                <Body>
                   <Text>
                     {data.text}
                   </Text>
-                </Left>
+                  <Text numberOfLines={1} note>
+                    {data.note}
+                  </Text>
+                </Body>
                 <Right>
-                  <Icon name="arrow-forward" style={{ color: "#999" }} />
+                  <Button transparent>
+                    <Text>View</Text>
+                  </Button>
                 </Right>
               </ListItem>}
           />
