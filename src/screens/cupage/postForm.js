@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Image, Dimensions, AsyncStorage, TouchableOpacity } from "react-native";
+import { Image, Dimensions, AsyncStorage, TouchableOpacity, ImageStore } from "react-native";
 import {
   Container,
   Header,
@@ -34,6 +34,7 @@ import Autocomplete from 'react-native-autocomplete-input';
 GLOBAL.fetch = fetch;
 
 /************ */
+import ImagePicker from 'react-native-image-picker';
 
 const logo = require("../../../assets/logo.png");
 const cardImage = require("../../../assets/drawer-cover.png");
@@ -82,7 +83,7 @@ class PostForm extends Component {
         </figure>
         <span class="iborrainputfile">Seleccionar archivo</span>
       </label>
-        <input id="imgs" name="uploadedfile" type="file" /> 
+        <input id="imgs" name="uploadedfile" type="file" accept="image/*" capture="camera" /> 
         <input id="ImgName" name="ImgName" type="hidden" value="${named}">  
         </form>
         <br/>
@@ -102,8 +103,84 @@ class PostForm extends Component {
   
      
   }
+  /********* */
+   options = {
+    title: 'Select Avatar',
+    customButtons: [
+      {name: 'fb', title: 'Choose Photo from Facebook'},
+    ],
+    storageOptions: {
+      skipBackup: true,
+      path: 'images'
+    }
+  };
+
+  loadCamera(){
+    var self=this;
+    ImagePicker.showImagePicker(this.options, (response) => {
+      //console.log('Response = ', response);
+    
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      }
+      else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      }
+      else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      }
+      else {
+        let source = { uri: response.uri };
+    
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        ImageStore.getBase64ForTag(
+          response.uri,
+          base64 => {
+            //console.log(base64);
+          },
+          error => console.log(error)
+        );
+      
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = false;
+        var txtImg="";
+
+        let formdata = new FormData();
+        
+
+        formdata.append("product[data]",  response.data );
+        formdata.append("product[fileName]",  response.fileName );
+        formdata.append("product[type]",  response.type );
+
+        xhr.addEventListener("readystatechange", function () {
+          if (this.readyState === 4) {
+            txtImg = this.responseText;
+            console.log(JSON.parse( this.responseText).image_url);
+            self.imgSrc=JSON.parse(this.responseText).image_url;
+          }
+        });
+
+        xhr.open("POST", "http://crearstore.com/fila/conn.php");   
+        xhr.setRequestHeader("content-type","multipart/form-data" );
+                
+        xhr.send(formdata); 
+       
+
+        /************* */
+    
+        this.setState({
+          avatarSource: source
+        });
+      }
+    });
+  }
+  
+  /******** */
 
   state = {
+
+    avatarSource: '',
 
     films: [],
       query: '',
@@ -479,6 +556,7 @@ class PostForm extends Component {
 
   render() {
 
+
     const { query } = this.state;
     const films = this.findFilm(query);
     const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
@@ -534,6 +612,18 @@ class PostForm extends Component {
 
               <Text style={styles.separation}></Text> 
 
+              
+              <Button block 
+
+                underlayColor='#ccc'
+                onPress={() => { this.loadCamera( ); } }
+                style={{ margin: 15, marginTop: 50 }}
+                >
+                  <Text>Camera</Text>
+                </Button>
+
+              <Image source={this.state.avatarSource} style={styles.uploadAvatar} />
+
         {/*    <View style={styles.container}>
               <Autocomplete
                 autoCapitalize="none"
@@ -568,6 +658,7 @@ class PostForm extends Component {
               <Label>Imagen de Producto</Label>              
             </Item>
             <Text style={styles.separation}></Text>
+            {/*
           <CustomWebView 
                 style={styles.containers}
                 source={{html: this.HTML}}
@@ -615,6 +706,7 @@ class PostForm extends Component {
                       simulateClick();                            
                       }); ` 
                   } />    
+                */}
 
              <Text style={styles.separation}></Text>
              <Item inlineLabel>

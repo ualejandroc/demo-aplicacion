@@ -91,5 +91,26 @@ npm install --save react-native-autocomplete-input
 
 de aqui:  https://github.com/l-urence/react-native-autocomplete-input
 
+6. Antes de compilar se necesita esto en 
+../android/gradle.properties,   asi: 
+
+android.useDeprecatedNdk=true
+
+MYAPP_RELEASE_STORE_FILE=my-release-key.keystore
+MYAPP_RELEASE_KEY_ALIAS=my-key-alias
+MYAPP_RELEASE_STORE_PASSWORD=0960687560
+MYAPP_RELEASE_KEY_PASSWORD=0960687560
+
+android.enableAapt2 = false
+
+
+7. Tambien poner esto:
+
+  buildToolsVersion "26.0.1"
+en 
+..\android\app\build.gradle
+
+
+
 
 
