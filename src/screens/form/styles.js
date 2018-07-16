@@ -45,6 +45,26 @@ export default {
     borderWidth: 1
   },
 
+  avatarContainer: {
+    borderColor: '#9B9B9B',
+    borderWidth: 1 ,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  avatar: {
+    borderRadius: 115,
+    width: 230,
+    height: 230
+  },
+
+  touchable: {
+    flex: 1,
+    //height:90,  
+    flexDirection: "column",
+    marginLeft:"20%",
+    width:"80%",
+  },
+
 
  
 };

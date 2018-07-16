@@ -118,7 +118,7 @@ class PostForm extends Component {
   loadCamera(){
     var self=this;
     ImagePicker.showImagePicker(this.options, (response) => {
-      //console.log('Response = ', response);
+      console.log('Response = ', response);
     
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -158,6 +158,14 @@ class PostForm extends Component {
             txtImg = this.responseText;
             console.log(JSON.parse( this.responseText).image_url);
             self.imgSrc=JSON.parse(this.responseText).image_url;
+            Toast.show({
+              text: 'Imagen elegida.',
+              buttonText: "Ok",
+              duration: 5000,
+              position: "top"
+            });
+
+            self.setState({avatarSource: source});
           }
         });
 
@@ -169,9 +177,7 @@ class PostForm extends Component {
 
         /************* */
     
-        this.setState({
-          avatarSource: source
-        });
+        
       }
     });
   }
@@ -208,10 +214,10 @@ class PostForm extends Component {
         src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg',
         position: 0
       },
-      {
+  /*    {
         src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_back.jpg',
         position: 1
-      }
+      }*/
     ],
     dataModel:''
       
@@ -238,10 +244,10 @@ class PostForm extends Component {
         src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg',
         position: 0
       },
-      {
+     /* {
         src: 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_back.jpg',
         position: 1
-      }
+      }*/
     ]
   }
 
@@ -516,12 +522,12 @@ class PostForm extends Component {
             msg = "Error al subir imagen, Por favor Elegir una imagen";
           } else{
             setTimeout(function(){ 
-              self.props.navigation.goBack();
+              self.props.navigation.navigate('HeaderSpan');
             }, 5000);          
           }
         } else{
           setTimeout(function(){ 
-            self.props.navigation.goBack();
+            self.props.navigation.navigate('HeaderSpan');
           }, 5000);          
         }
         
@@ -612,15 +618,19 @@ class PostForm extends Component {
 
               <Text style={styles.separation}></Text> 
 
-              
-              <Button block 
+              <Item inlineLabel>
+                <Label>Imagen de Producto</Label>              
+              </Item>            
 
-                underlayColor='#ccc'
-                onPress={() => { this.loadCamera( ); } }
-                style={{ margin: 15, marginTop: 50 }}
-                >
-                  <Text>Camera</Text>
-                </Button>
+                <TouchableOpacity 
+                style={styles.touchable}
+                onPress={() => { this.loadCamera( )}}>
+                  <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20, marginTop: 20}]}>
+                  { this.state.avatarSource === '' ? <Text>Seleccionar Imagen</Text> :
+                    <Image style={styles.avatar} source={this.state.avatarSource} />
+                  }
+                  </View>
+                </TouchableOpacity>
 
               <Image source={this.state.avatarSource} style={styles.uploadAvatar} />
 
@@ -651,12 +661,8 @@ class PostForm extends Component {
                 )}
               </View>
             </View>
-              */}                  
-  
-
-          <Item inlineLabel>
-              <Label>Imagen de Producto</Label>              
-            </Item>
+              */}         
+          
             <Text style={styles.separation}></Text>
             {/*
           <CustomWebView 

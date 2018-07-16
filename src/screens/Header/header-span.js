@@ -49,7 +49,7 @@ class HeaderSpan extends Component {
           
           
         </Grid>
-          <Text>Productos de la tienda</Text>
+          
   
          
           
@@ -58,7 +58,7 @@ class HeaderSpan extends Component {
             active={this.state.active}
             direction="up"
             containerStyle={{ }}
-            style={{ backgroundColor: '#5067FF' }}
+            style={{ backgroundColor: '#e91e63' }}
             position="bottomRight"
             onPress={() => 
               { this.setState({ active: !this.state.active })
@@ -67,21 +67,8 @@ class HeaderSpan extends Component {
               
               }>
               
-            <Icon name="share" />
-            <Button style={{ backgroundColor: '#34A34F' }}
-            onPress={() => 
-              { 
-                this.props.navigation.navigate("CreateProd")
-              } }                       
-            >
-              <Icon name="logo-whatsapp" />
-            </Button>
-            <Button style={{ backgroundColor: '#3B5998' }}>
-              <Icon name="logo-facebook" />
-            </Button>
-            <Button disabled style={{ backgroundColor: '#DD5144' }}>
-              <Icon name="mail" />
-            </Button>
+            <Icon name="add" />
+           
               
           </Fab>
       

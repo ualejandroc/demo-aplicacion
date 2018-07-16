@@ -134,7 +134,7 @@ export default class Product extends Component {
 		</Animated.View> */}
 
 				<ScrollView
-					style={{paddingTop: 106}}
+					style={{paddingTop: 10}}
 					onScroll={this.onScroll.bind(this)} scrollEventThrottle={7}
 				>
 					<ListView
